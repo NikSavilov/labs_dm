@@ -11,12 +11,13 @@ int main() {
     input >> first_num >> second_num;
     input.close();
 
-    long sum = first_num + second_num;
+    long res = first_num + second_num * second_num;
 
     ofstream output("aplusb.out");
     if (!output.is_open()){
         exit(2);
     }
-    output << sum;
+    output << res;
+    output.close();
     return 0;
 }
