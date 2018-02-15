@@ -1,23 +1,25 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip>
+
 using namespace std;
 
 int main() {
-    ifstream input("aplusb.in");
-    if (!input.is_open()){
-        exit(1);
-    }
-    long int first_num, second_num;
+    ifstream input("aplusbb.in");
+    double first_num, second_num;
     input >> first_num >> second_num;
     input.close();
 
-    long res = first_num + second_num * second_num;
+    double res = first_num + second_num * second_num;
 
-    ofstream output("aplusb.out");
-    if (!output.is_open()){
-        exit(2);
+    FILE * output = fopen("aplusbb.out","w");
+
+    int rounded = res;
+    if (res - rounded == 0){
+        fprintf(output,"%d",rounded);
     }
-    output << res;
-    output.close();
+    else
+        fprintf(output,"%f",res);
+
     return 0;
 }
