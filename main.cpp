@@ -3,33 +3,39 @@
 #include <iomanip>
 
 using namespace std;
+void quicksort(int *arr, int first, int last)
+{
+    int mid, count;
+    int f=first, l=last;
+    mid=arr[(f+l) / 2]; //вычисление опорного элемента
+    do
+    {
+        while (arr[f]<mid) f++;
+        while (arr[l]>mid) l--;
+        if (f<=l) //перестановка элементов
+        {
+            count=arr[f];
+            arr[f]=arr[l];
+            arr[l]=count;
+            f++;
+            l--;
+        }
+    } while (f <= l);
 
+    if (first<l) quicksort(arr, first, l);
+    if (f<last) quicksort(arr, f, last);
+}
 int main() {
-    ifstream input("sortland.in");
+    ifstream input("smallsort.in");
     int n;
     input >> n;
-    double salary[n], id[n];
-    // Filling two related arrays
-    for (int h=0;h<n;h++){
-        input >> salary[h];
-        id[h]=h+1;
+    int arr[n];
+    for (int i=0;i<n;i++){
+        input >> arr[i];
     }
-    for (int i=1;i<n;i++){
-        for(int j=0;j<n-i;j++){
-            if(salary[j]<salary[j+1]){
-                //Swapping
-                salary[j] += salary[j+1];
-                salary[j+1] = salary[j] - salary[j+1];
-                salary[j] = salary[j] - salary[j+1];
-                id[j] += id[j+1];
-                id[j+1] = id[j] - id[j+1];
-                id[j] = id[j] - id[j+1];
-            }
-        }
-    }
+    quicksort(arr, 0, n - 1);
     input.close();
-    ofstream output("sortland.out");
-    output << id[n-1] << " " << id[n/2] << " " << id[0];
+    ofstream output("smallsort.out");
     output.close();
     return 0;
 }
