@@ -26,7 +26,7 @@ void quicksort(int *arr, int first, int last)
     if (f<last) quicksort(arr, f, last);
 }
 int main() {
-    ifstream input("smallsort.in");
+    ifstream input("sort.in");
     int n;
     input >> n;
     int arr[n];
@@ -35,7 +35,7 @@ int main() {
     }
     quicksort(arr, 0, n - 1);
     input.close();
-    ofstream output("smallsort.out");
+    ofstream output("sort.out");
     output.close();
     return 0;
 }
