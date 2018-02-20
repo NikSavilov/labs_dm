@@ -7,8 +7,9 @@ void quicksort(int *arr, int first, int last)
 {
     int mid, count;
     int f=first, l=last;
-    mid = arr[f]; //вычисление опорного элемента
-    while (f <= l){
+    srand(time(NULL));
+    mid = arr[f + rand() % (l-f+1) ]; //вычисление опорного элемента
+    for (int z=0;;z++){
         for(int h = f;;h++){
             if (arr[h] >= mid){
                 f = h;
@@ -29,7 +30,8 @@ void quicksort(int *arr, int first, int last)
             f++;
             l--;
         }
-    } ;
+        if (f > l){break;}
+    };
 
     if (first<l) quicksort(arr, first, l);
     if (f<last) quicksort(arr, f, last);
