@@ -41,13 +41,14 @@ int main() {
         arr[i].number = i;
     }
     int count = n;
+    ofstream output("race.out");
     string cur_country = arr[1].country, next_country = cur_country;
     while (count !=0) {
-        cout << "=== " + cur_country + " ==="<< endl;
+        output << "=== " + cur_country + " ==="<< endl;
         for (int i = 1; i < n+1; i++){
             if (arr[i].country != ""){
                 if (arr[i].country == cur_country){
-                    cout << arr[i].name << endl;
+                    output << arr[i].name << endl;
                     count--;
                     arr[i].country = "";
                 }
@@ -59,7 +60,6 @@ int main() {
         cur_country = next_country;
     }
     input.close();
-    ofstream output("race.out");
     output.close();
     return 0;
 }
