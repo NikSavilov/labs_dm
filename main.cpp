@@ -1,75 +1,50 @@
 #include <iostream>
 #include <fstream>
-#include <iomanip>
+#include <vector>
+
+#define VEC vector
+#define PB push_back
+
 using namespace std;
-int count=0;
-void merge(int arr[], int left, int mid, int right)
-{
-    int LenL = mid - left + 1;
-    int LenR =  right - mid;
-    int L[LenL], R[LenR];
-    for (int i = 0; i < LenL; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < LenR; j++)
-        R[j] = arr[mid + 1 + j];
-    int Lpointer = 0;
-    int Rpointer = 0;
-    int pos = left;
-    while (Lpointer < LenL && Rpointer < LenR)
-    {
-        if (L[Lpointer] > R[Rpointer])
-        {
-            arr[pos] = L[Lpointer];
-            Lpointer++;
-            count++;
+
+void mergeSort(VEC <int> &a, int L, int R, long long &ans) {
+    if (R - L < 2) return;
+    mergeSort(a, L, L + (R - L) / 2, ans);
+    mergeSort(a, L + (R - L) / 2, R, ans);
+    VEC <int> tmp;
+    int Lf = L, Rf = L + (R - L) / 2;
+    int Ls = Rf, Rs = R;
+    while (tmp.size() < R - L) {
+        if (Lf >= Rf || (a[Ls] < a[Lf] && Ls < R)) {
+            tmp.PB(a[Ls]);
+            Ls++;
+            ans += L + (R - L) / 2 - Lf;
+        } else {
+            tmp.PB(a[Lf]);
+            Lf++;
         }
-        else
-        {
-            arr[pos] = R[Rpointer];
-            Rpointer++;
-        }
-        pos++;
     }
-    while (Lpointer < LenL)
-    {
-        arr[pos] = L[Lpointer];
-        Lpointer++;
-        pos++;
-        count++;
-    }
-    while (Rpointer < LenR)
-    {
-        arr[pos] = R[Rpointer];
-        Rpointer++;
-        pos++;
+    for (int i = L; i < R; ++i) {
+        a[i] = tmp[i - L];
     }
 }
-void MergeSort(int arr[], int left, int right)
-{
-    if (left < right)
-    {
-        int mid = left + (right - left) / 2;
-        MergeSort(arr, left, mid);
-        MergeSort(arr, mid + 1, right);
-        merge(arr, left, mid, right);
-    }
-}
+
 int main() {
-    ifstream input("inversions.in");
     int n;
-    input >> n;
-    int arr[n];
-    for (int i=0;i<n;i++){
-        input >> arr[i];
-        cout << arr[i] << " ";
+    long long ans = 0;
+
+    ifstream cin("inversions.in");
+    ofstream cout("inversions.out");
+
+    cin >> n;
+    if (n == 0 || n == 1) {
+        cout << 0;
+        return 0;
     }
-    cout << endl;
-    MergeSort(arr,0,n-1);
-    for (int i=0;i<10;i++){
-        cout << arr[i] << ' ';
-    }
-    cout << count;
-    input.close();
-    //output.close();
+    VEC <int> a(n);
+    for (int i = 0; i < n; ++i)
+        cin >> a[i];
+    mergeSort(a, 0, a.size(), ans);
+    cout << ans;
     return 0;
 }
