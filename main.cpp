@@ -1,72 +1,59 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
-
-#define VEC vector
-#define PB push_back
 
 using namespace std;
 
-int order_stat(VEC<int> &a, int k) {
-    int l = 1, r = a.size()-1;
-    while (1) {
-        if (r <= l + 1) {
-            // текущая часть состоит из 1 или 2 элементов -
-            //   легко можем найти ответ
-            if (r == l + 1 && a[r] < a[l])
-                swap(a[l], a[r]);
-            return a[k];
+const int MAXN = 1000 + 15, MAXVAL = 255;
+
+int n, m, k;
+char s[MAXN][MAXN], B[MAXN][MAXN];
+int C[MAXVAL];
+
+void RadixSort() {
+    for (int i = m - 1; i > m - k - 1; --i) {
+        for (int j = 0; j < MAXVAL; ++j)
+            C[j] = 0;
+        for (int j = 0; j < n; ++j) {
+            int d = (s[j][i] - '0');
+            C[d]++;
         }
-
-        // упорядочиваем a[l], a[l+1], a[r]
-        unsigned mid = ((l + r) >> 1);
-        swap(a[mid], a[l + 1]);
-        if (a[l] > a[r])
-            swap(a[l], a[r]);
-        if (a[l + 1] > a[r])
-            swap(a[l + 1], a[r]);
-        if (a[l] > a[l + 1])
-            swap(a[l], a[l + 1]);
-
-        // выполняем разделение
-        // барьером является a[l+1], т.е. медиана среди a[l], a[l+1], a[r]
-        unsigned
-                i = l + 1,
-                j = r;
-        const int
-                cur = a[l + 1];
-        for (;;) {
-            while (a[++i] < cur);
-            while (a[--j] > cur);
-            if (i > j)
-                break;
-            swap(a[i], a[j]);
+        int cnt = 0;
+        for (int j = 0; j < MAXVAL; ++j) {
+            int tmp = C[j];
+            C[j] = cnt;
+            cnt += tmp;
         }
-
-        // вставляем барьер
-        a[l + 1] = a[j];
-        a[j] = cur;
-
-        // продолжаем работать в той части,
-        //   которая должна содержать искомый элемент
-        if (j >= k)
-            r = j - 1;
-        if (j <= k)
-            l = i;
+        for (int j = 0; j < n; ++j) {
+            int d = int(s[j][i] - '0');
+            for (int g = 0; g < m; ++g) {
+                B[C[d]][g] = s[j][g];
+            }
+            C[d]++;
+        }
+        for (int j = 0; j < n; ++j)
+            for (int g = 0; g < m; ++g)
+                s[j][g] = B[j][g];
     }
 }
-int main() {
-    ifstream cin("kth.in");
-    ofstream cout("kth.out");
 
-    int a, b, c, n, k;
-    cin >> n >> k;
-    VEC<int> num(n+1);
-    cin >> a >> b >> c >> num[1] >> num[2];
-    for (int i = 3; i <= n; ++i) {
-        num[i] = a * num[i - 2] + b * num[i - 1] + c;
+int main() {
+    ifstream cin("radixsort.in");
+    ofstream cout("radixsort.out");
+
+    cin >> n  >> m >> k;
+
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            cin >> s[i][j];
+
+    RadixSort();
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j)
+            cout << s[i][j];
+        cout << "\n";
     }
 
-    cout << order_stat(num, k);
 
     return 0;
+}
