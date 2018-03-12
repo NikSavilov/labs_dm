@@ -1,29 +1,40 @@
-#include <iostream>
 #include <fstream>
-#include <vector>
-
+#include <stack>
 using namespace std;
 
+void clean(stack<char> &s) {
+    while (!s.empty())
+        s.pop();
+}
+
+bool sovp(char c, char h) {
+    if (c == ')')
+        return h == '(';
+    return h == '[';
+}
+
 int main() {
-    ifstream cin("stack.in");
-    ofstream cout("stack.out");
-    int n;
-    cin >> n;
-    vector <int> stack;
-    string z;
-    int m;
-    for (int i = 0; i < n; ++i){
-        cin >> z;
-        if (z == "+"){
-            cin >> m;
-            stack.push_back(m);
+    ifstream cin("brackets.in");
+    ofstream cout("brackets.out");
+    string str;
+    stack<char> s;
+    while (cin >> str) {
+        clean(s);
+        for (int i = 0; i < str.size(); i++) {
+            if (str[i] == '(' || str[i] == '[') {
+                s.push(str[i]);
+            } else if (sovp(str[i], (!s.empty()) ? s.top() : str[i] )) {
+                s.pop();
+            } else {
+                s.push(str[i]);
+                break;
+            }
         }
-        else if (z == "-"){
-            cout << stack[stack.size()-1] << endl;
-            stack.pop_back();
+        if (s.size() == 0) {
+            cout << "YES\n";
+        } else {
+            cout << "NO\n";
         }
     }
-
-
     return 0;
 }
