@@ -2,39 +2,35 @@
 #include <stack>
 using namespace std;
 
-void clean(stack<char> &s) {
-    while (!s.empty())
-        s.pop();
-}
-
-bool sovp(char c, char h) {
-    if (c == ')')
-        return h == '(';
-    return h == '[';
+int make(int a, int b, char c){
+    switch (c){
+        case '+': return a+b;
+        case '-': return a-b;
+        case '*': return a*b;
+        default: return 0;
+    }
 }
 
 int main() {
-    ifstream cin("brackets.in");
-    ofstream cout("brackets.out");
-    string str;
-    stack<char> s;
-    while (cin >> str) {
-        clean(s);
-        for (int i = 0; i < str.size(); i++) {
-            if (str[i] == '(' || str[i] == '[') {
-                s.push(str[i]);
-            } else if (sovp(str[i], (!s.empty()) ? s.top() : str[i] )) {
+    ifstream cin("postfix.in");
+    ofstream cout("postfix.out");
+    int a,b;
+    char c;
+    stack <int> s;
+    while(cin >> c){
+        if (c!=' '){
+            if (c >= '0' and c<='9'){
+                s.push(c - '0');
+            }
+            else {
+                a = s.top();
                 s.pop();
-            } else {
-                s.push(str[i]);
-                break;
+                b = s.top();
+                s.pop();
+                s.push(make(b,a,c));
             }
         }
-        if (s.size() == 0) {
-            cout << "YES\n";
-        } else {
-            cout << "NO\n";
-        }
     }
+    cout << s.top();
     return 0;
 }
